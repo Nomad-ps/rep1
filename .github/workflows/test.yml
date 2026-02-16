@@ -1,0 +1,21 @@
+name: Test Runner
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: self-hosted
+
+    steps:
+      - name: Who am I
+        run: whoami
+
+      - name: Docker test
+        run: docker --version
+
+      - name: Kubectl test
+        run: kubectl version --client
+
+      - name: Helm test
+        run: helm version

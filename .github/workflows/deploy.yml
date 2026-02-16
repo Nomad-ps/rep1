@@ -1,0 +1,36 @@
+name: Build and Deploy FastAPI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set image tag
+        run: echo "IMAGE_TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Login to Nexus
+        run: |
+          echo "${{ secrets.NEXUS_PASSWORD }}" | docker login nexus.nomad.local \
+          -u "${{ secrets.NEXUS_USERNAME }}" --password-stdin
+
+      - name: Build image
+        run: |
+          docker build -t nexus.nomad.local/docker-hosted/fastapi:${IMAGE_TAG} .
+
+      - name: Push image
+        run: |
+          docker push nexus.nomad.local/docker-hosted/fastapi:${IMAGE_TAG}
+
+      - name: Deploy via Helm
+        run: |
+          helm upgrade --install fastapi ./helm \
+            --set image.repository=nexus.nomad.local/docker-hosted/fastapi \
+            --set image.tag=${IMAGE_TAG}
