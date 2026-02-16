@@ -29,11 +29,11 @@ jobs:
         run: |
           docker push nexus.nomad.local/docker-hosted/fastapi:${IMAGE_TAG}
 
-      - name: Deploy via Helm
+      - name: debug 1
         run: |
           pwd
           
-      - name: Deploy via Helm
+      - name: debug 2
         run: |
           ls -la
       
