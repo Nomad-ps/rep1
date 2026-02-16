@@ -13,7 +13,7 @@ class Item(BaseModel):
 
 @app.get("/")
 def read_root():
-    return {"goodbye": "World"}
+    return {"goodbye": "cruel": "World"}
 
 
 @app.get("/get-var")
